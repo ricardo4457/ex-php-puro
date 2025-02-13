@@ -35,15 +35,15 @@ CREATE TABLE files (
 -- Insert a test user (password: "123456" hashed)
 INSERT INTO users (email, password)
 VALUES (
-    'john.doe@example.com',
-    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' -- Hash for "123456"
+    'ricardo.vieira@example.com',
+    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' -- Hash da senha "123456"
 );
 
 -- Insert the test user's profile
 INSERT INTO profiles (user_id, name, birthdate, phone)
 VALUES (
-    1, -- ID of the user inserted above
-    'John Doe',
-    '1985-05-15',
+    1, -- ID do utilizador inserido acima
+    'Ricardo Vieira',
+    '2003-01-14',
     '912345678'
 );
