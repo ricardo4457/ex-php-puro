@@ -9,28 +9,29 @@ $validationRules = [
    'password' => 'validatePassword'
 ];
 
-// Initialize errors array to store any validation errors
+// Initialize errors array to store validation errors
 $errors = [];
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-   // Loop through each field and validate
+   // Loop through each field and validate using the defined validation rules
    foreach ($validationRules as $field => $validationFunction) {
-      $$field = $_POST[$field] ?? ''; // Dynamically create variable name ( $email, $password)
-      $error = $validationFunction($$field); // Call the validation function dynamically
+      // Get the value of the field and validate it
+      $value = $_POST[$field] ?? '';
+      $error = $validationFunction($value);
+
+      // If there's an error, store it in the errors array
       if ($error) {
-         $errors[$field] = $error; // Add error to the errors array
+         $errors[$field] = $error;
       }
    }
 
-   // If no errors, attempt login
-   if (empty($errors)) {
-      if (login($email, $password)) {
-         header('Location: x');
-         exit();
-      } else {
-         $errors['general'] = "Invalid email or password.";
-      }
+   // If there are no errors, attempt to login
+   if (empty($errors) && login($email, $password)) {
+      header('Location: overview.php');
+      exit();
+   } else {
+      $errors['general'] = "INTERNAL ERROR";
    }
 }
 
