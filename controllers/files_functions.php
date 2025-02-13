@@ -15,32 +15,35 @@ function getFileById($file_id)
    return $result->fetch_assoc();
 }
 
-function addFile($user_id, $file_name, $temp_file)
-{
+function addFile($user_id, $file_name, $temp_file) {
    global $connection;
 
-   // Define the upload directory
-   $upload_dir = 'uploads/';
+   // Check if a file with the same name already exists for the user
+   $sql = "SELECT id FROM files WHERE user_id = ? AND file_name = ?";
+   $search = $connection->prepare($sql);
+   $search->bind_param('is', $user_id, $file_name);
+   $search->execute();
+   $search->store_result();
 
-   // Ensure the upload directory exists
-   if (!is_dir($upload_dir)) {
-      mkdir($upload_dir, 0755, true);
+   if ($search->num_rows > 0) {
+       // A file with the same name already exists
+       return false;
    }
 
-   // Generate a unique file name to avoid conflicts
-   $unique_file_name = uniqid() . '_' . basename($file_name);
-   $file_path = $upload_dir . $unique_file_name;
+   // Define the path where the file will be stored
+   $uploads_folder = __DIR__ . '/../uploads/'; // Absolute path to the "uploads" folder
+   $file_path = $uploads_folder . basename($file_name);
 
-   // Move the uploaded file to the upload directory
+   // Move the file to the "uploads" folder
    if (move_uploaded_file($temp_file, $file_path)) {
-      // Save the file details in the database
-      $sql = "INSERT INTO files (user_id, file_name, file_path) VALUES (?, ?, ?)";
-      $stmt = $connection->prepare($sql);
-      $stmt->bind_param('iss', $user_id, $file_name, $file_path);
-      return $stmt->execute();
+       // Insert the file path into the database
+       $sql = "INSERT INTO files (user_id, file_name, file_path) VALUES (?, ?, ?)";
+       $search = $connection->prepare($sql);
+       $search->bind_param('iss', $user_id, $file_name, $file_path);
+       return $search->execute();
+   } else {
+       return false; // Failed to move the file
    }
-
-   return false;
 }
 
 function getFiles($user_id)
@@ -86,9 +89,9 @@ function deleteFile($file_id, $user_id)
 
       // Delete the file record from the database
       $sql = "DELETE FROM files WHERE id = ?";
-      $stmt = $connection->prepare($sql);
-      $stmt->bind_param('i', $file_id);
-      return $stmt->execute();
+      $search = $connection->prepare($sql);
+      $search->bind_param('i', $file_id);
+      return $search->execute();
    }
 
    return false; // File not found or user not authorized

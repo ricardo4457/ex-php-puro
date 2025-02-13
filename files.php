@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
          if (addFile($user_id, $file_name, $temp_file)) {
             $success_message = "File uploaded successfully!";
          } else {
-            $error_message = "Error uploading file.";
+            $error_message = "A file with the same name already exists.";
          }
       } else {
          $error_message = $validation_result;
