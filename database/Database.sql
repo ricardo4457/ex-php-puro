@@ -36,7 +36,7 @@ CREATE TABLE files (
 INSERT INTO users (email, password)
 VALUES (
     'ricardo.vieira@example.com',
-    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' -- Hash da senha "123456"
+    SHA2('123456', 256)
 );
 
 -- Insert the test user's profile
