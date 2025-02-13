@@ -1,3 +1,46 @@
+<?php
+session_start();
+
+// Redirect to login if the user is not logged in
+if (!isset($_SESSION['user_id'])) {
+   header('Location: index.php');
+   exit;
+}
+
+include 'controllers/profile_functions.php';
+
+$user_id = $_SESSION['user_id'];
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+   $name = $_POST['name'];
+   $birthdate = $_POST['birthdate'];
+   $phone = $_POST['phone'];
+
+   $profile_photo = null;
+   $uploads_folder = __DIR__ . '/uploads/'; // Stay in the current directory
+
+   // Make sure the uploads directory exists and is writable
+   if (!is_dir($uploads_folder)) {
+      mkdir($uploads_folder, 0777, true); // Create the directory if it doesn't exist
+   }
+
+   $original_file_name = basename($_FILES['profile_photo']['name']);
+   $unique_file_name = $user_id . '_' . time() . '_' . $original_file_name;
+   $profile_photo_path = $uploads_folder . $unique_file_name;
+
+   if (move_uploaded_file($_FILES['profile_photo']['tmp_name'], $profile_photo_path)) {
+      $profile_photo = $unique_file_name; // Save only the file name (not the full path)
+   } else {
+      echo "File upload failed. Check folder permissions.";
+   }
+
+   // Update the profile with only the file name
+   updateProfile($user_id, $name, $birthdate, $phone, $profile_photo);
+}
+
+$profile = getProfile($user_id);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,9 +66,10 @@
                <div class="card-body">
                   <h1 class="card-title text-center">My Profile</h1>
 
-                  <!-- Image Preview Container  -->
+                  <!-- Image Preview Container -->
                   <div class="text-center mb-4">
-                     <img id="imagePreview" src="#" alt="Image Preview" class="img-fluid d-none">
+                     <img id="imagePreview" src="<?php echo !empty($profile['profile_photo']) ? 'uploads/' . $profile['profile_photo'] : '#'; ?>"
+                        alt="Image Preview" class="img-fluid <?php echo empty($profile['profile_photo']) ? 'd-none' : ''; ?>">
                   </div>
 
                   <form method="POST" enctype="multipart/form-data">
