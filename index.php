@@ -22,7 +22,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    foreach ($validationRules as $field => $validationFunction) {
       // Get the value of the field and validate it
       $value = $_POST[$field] ?? '';
-      $error = $validationFunction($value);
+      
+      // Pass both the value and email to validatePassword function
+      if ($field === 'password') {
+         // If the field is password, we need to pass both password and email
+         $error = $validationFunction($value, $email);
+      } else {
+         // For other fields, just pass the value
+         $error = $validationFunction($value);
+      }
 
       // If there's an error, store it in the errors array
       if ($error) {
@@ -34,12 +42,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    if (empty($errors) && login($email, $password)) {
       header('Location: overview.php');
       exit();
-   } else {
-      $errors['general'] = "INTERNAL ERROR";
    }
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -74,6 +80,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                            <div class="text-danger"><?php echo $errors['password']; ?></div>
                         <?php endif; ?>
                      </div>
+                     <?php if (isset($errors['general'])): ?>
+                        <div class="alert alert-danger"><?= $errors['general'] ?></div>
+                     <?php endif; ?>
                      <button type="submit" class="btn btn-primary w-100">Login</button>
                   </form>
                </div>

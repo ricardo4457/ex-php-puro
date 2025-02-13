@@ -6,7 +6,10 @@ $password = '';
 
 $connection = new mysqli($server, $user, $password, $database);
 
-if ($connection->connect_error) {
-    die("Connection error: " . $connection->connect_error);
+try {
+    // Create a new PDO instance
+    $pdo = new PDO("mysql:host=$server;dbname=$database", $user, $password);
+} catch (PDOException $e) {
+    // Catch any connection error and display a message
+    die("Connection failed: " . $e->getMessage());
 }
-?>
