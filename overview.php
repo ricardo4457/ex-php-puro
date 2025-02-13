@@ -27,7 +27,7 @@ if (!isset($_SESSION['user_id'])) {
                   <div class="d-grid gap-2">
                      <a href="x" class="btn btn-primary">My Profile</a>
                      <a href="x" class="btn btn-secondary">My Files</a>
-                     <a href="x" class="btn btn-danger">Logout</a>
+                     <a href="logout.php" class="btn btn-danger">Logout</a>
                   </div>
                </div>
             </div>
