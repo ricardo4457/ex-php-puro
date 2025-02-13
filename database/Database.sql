@@ -1,49 +1,49 @@
--- Cria a base de dados
-CREATE DATABASE gestao_funcionarios;
+-- Create the database
+CREATE DATABASE employee_management;
 
--- Seleciona a base de dados
-USE gestao_funcionarios;
+-- Select the database
+USE employee_management;
 
--- Tabela de utilizadores
-CREATE TABLE utilizadores (
+-- Users table
+CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
-    palavra_passe VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL
 );
 
--- Tabela de perfis
-CREATE TABLE perfis (
+-- Profiles table
+CREATE TABLE profiles (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    utilizador_id INT NOT NULL,
-    nome VARCHAR(100) NOT NULL,
-    data_nascimento DATE,
-    telefone VARCHAR(20),
-    foto_perfil VARCHAR(255), -- Caminho da foto de perfil
-    FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id) ON DELETE CASCADE
+    user_id INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    birthdate DATE,
+    phone VARCHAR(20),
+    profile_photo VARCHAR(255), -- Path to the profile photo
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Tabela de ficheiros
-CREATE TABLE ficheiros (
+-- Files table
+CREATE TABLE files (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    utilizador_id INT NOT NULL,
-    nome_ficheiro VARCHAR(255) NOT NULL,
-    caminho_ficheiro VARCHAR(255) NOT NULL, -- Caminho do ficheiro no servidor
-    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (utilizador_id) REFERENCES utilizadores(id) ON DELETE CASCADE
+    user_id INT NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file_path VARCHAR(255) NOT NULL, -- Path to the file on the server
+    upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Insere um utilizador de teste (senha: "123456" em hash)
-INSERT INTO utilizadores (email, palavra_passe)
+-- Insert a test user (password: "123456" hashed)
+INSERT INTO users (email, password)
 VALUES (
-    'ricardo.vieira@example.com',
-    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' -- Hash da senha "123456"
+    'john.doe@example.com',
+    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' -- Hash for "123456"
 );
 
--- Insere o perfil do utilizador de teste
-INSERT INTO perfis (utilizador_id, nome, data_nascimento, telefone)
+-- Insert the test user's profile
+INSERT INTO profiles (user_id, name, birthdate, phone)
 VALUES (
-    1, -- ID do utilizador inserido acima
-    'Ricardo Vieira',
+    1, -- ID of the user inserted above
+    'John Doe',
     '1985-05-15',
     '912345678'
 );
