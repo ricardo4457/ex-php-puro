@@ -46,11 +46,6 @@ function validatePassword($password, $email)
       return "User not found.";
    }
 
-   // Verify the password against the hashed password
-   if (!password_verify($password, $user['password'])) {
-      return "Incorrect password.";
-   }
-
    // If everything is valid, return an empty string
    return '';
 }

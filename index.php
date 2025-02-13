@@ -26,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       // Pass both the value and email to validatePassword function
       if ($field === 'password') {
          // If the field is password, we need to pass both password and email
+         
          $error = $validationFunction($value, $email);
       } else {
          // For other fields, just pass the value
