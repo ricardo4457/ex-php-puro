@@ -8,19 +8,31 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 include 'controllers/files_functions.php';
+include 'validations/fileValidation.php';
 
 $user_id = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-   if ($_FILES['file']['error'] == 0) {
-      $file_name = $_FILES['file']['name'];
-      $temp_file = $_FILES['file']['tmp_name'];
+   if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
+       // Validate the file size
+       $validation_result = validateFileSize($_FILES['file']);
 
-      if (addFile($user_id, $file_name, $temp_file)) {
-         $success_message = "File uploaded successfully!";
-      } else {
-         $error_message = "Error uploading file.";
-      }
+       if ($validation_result === true) {
+           // If validation passes, proceed with the upload
+           $file_name = $_FILES['file']['name']; // Use the original file name
+           $temp_file = $_FILES['file']['tmp_name'];
+
+           if (addFile($user_id, $file_name, $temp_file)) {
+               $success_message = "File uploaded successfully!";
+           } else {
+               $error_message = "Error uploading file.";
+           }
+       } else {
+           // If validation fails, set an error message
+           $error_message = $validation_result;
+       }
+   } else {
+       $error_message = "No file uploaded or an error occurred.";
    }
 }
 
@@ -52,11 +64,11 @@ $files = getFiles($user_id);
                   <form method="POST" enctype="multipart/form-data">
                      <div class="mb-3">
                         <label for="file" class="form-label">Upload File:</label>
-                        <input type="file" name="file" class="form-control">
+                        <input type="file" name="file" class="form-control" required>
+                        <small class="form-text text-muted">Maximum file size: 30MB.</small>
                      </div>
                      <button type="submit" class="btn btn-primary w-100">Upload</button>
                   </form>
-
                   <h2 class="mt-4">Uploaded Files</h2>
                   <ul class="list-group">
                      <?php foreach ($files as $file): ?>
