@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <title>Overview</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+   <div class="container mt-5">
+      <div class="row justify-content-center">
+         <div class="col-md-6">
+            <div class="card shadow">
+               <div class="card-body text-center">
+                  <h1 class="card-title">Welcome!</h1>
+                  <p>What would you like to do?</p>
+                  <div class="d-grid gap-2">
+                     <a href="x" class="btn btn-primary">My Profile</a>
+                     <a href="x" class="btn btn-secondary">My Files</a>
+                     <a href="x" class="btn btn-danger">Logout</a>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</body>
+
+</html>
