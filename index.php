@@ -1,17 +1,39 @@
 <?php
 include 'controllers/auth.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-   $email = $_POST['email'];
-   $password = $_POST['password'];
+include 'validations/loginValidation.php';
 
-   if (login($email, $password)) {
-      header('Location: x');
-      exit();
-   } else {
-      $error_message = "Incorrect email or password.";
+// Define an array to hold field names and corresponding validation functions
+$validationRules = [
+   'email' => 'validateEmail',
+   'password' => 'validatePassword'
+];
+
+// Initialize errors array to store any validation errors
+$errors = [];
+
+// Handle form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+   // Loop through each field and validate
+   foreach ($validationRules as $field => $validationFunction) {
+      $$field = $_POST[$field] ?? ''; // Dynamically create variable name ( $email, $password)
+      $error = $validationFunction($$field); // Call the validation function dynamically
+      if ($error) {
+         $errors[$field] = $error; // Add error to the errors array
+      }
+   }
+
+   // If no errors, attempt login
+   if (empty($errors)) {
+      if (login($email, $password)) {
+         header('Location: x');
+         exit();
+      } else {
+         $errors['general'] = "Invalid email or password.";
+      }
    }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -30,17 +52,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="card shadow">
                <div class="card-body">
                   <h1 class="card-title text-center">Login</h1>
-                  <?php if (isset($error_message)): ?>
-                     <div class="alert alert-danger"><?php echo $error_message; ?></div>
-                  <?php endif; ?>
                   <form method="POST">
                      <div class="mb-3">
                         <label for="email" class="form-label">Email:</label>
                         <input type="email" name="email" class="form-control" required>
+                        <!-- Display email validation error -->
+                        <?php if (isset($errors['email'])): ?>
+                           <div class="text-danger"><?php echo $errors['email']; ?></div>
+                        <?php endif; ?>
                      </div>
                      <div class="mb-3">
                         <label for="password" class="form-label">Password:</label>
                         <input type="password" name="password" class="form-control" required>
+                        <!-- Display password validation error -->
+                        <?php if (isset($errors['password'])): ?>
+                           <div class="text-danger"><?php echo $errors['password']; ?></div>
+                        <?php endif; ?>
                      </div>
                      <button type="submit" class="btn btn-primary w-100">Login</button>
                   </form>
