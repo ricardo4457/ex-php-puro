@@ -105,11 +105,16 @@ $profile = getProfile($user_id);
    <title>My Profile</title>
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
    <style>
+      /* Optional: Add custom styles if needed */
       #imagePreview {
-         max-width: 100%;
-         height: auto;
-         border-radius: 8px;
-         margin-top: 10px;
+         object-fit: cover;
+      }
+
+      #imgContainer {
+         border-radius: 50%;
+         width: 200px;
+         height: 200px;
+         overflow: hidden;
       }
    </style>
 </head>
@@ -124,8 +129,12 @@ $profile = getProfile($user_id);
 
                   <!-- Image Preview Container -->
                   <div class="text-center mb-4">
-                     <img id="imagePreview" src="<?php echo !empty($profile['profile_photo']) ? 'uploads/' . $profile['profile_photo'] : '#'; ?>"
-                        alt="Image Preview" class="img-fluid <?php echo empty($profile['profile_photo']) ? 'd-none' : ''; ?>">
+                     <div class="d-flex justify-content-center">
+                        <div id="imgContainer">
+                           <img id="imagePreview" src="<?php echo !empty($profile['profile_photo']) ? 'uploads/' . $profile['profile_photo'] : '#'; ?>"
+                              alt="Image Preview" class="img-fluid h-100 w-100 <?php echo empty($profile['profile_photo']) ? 'd-none' : ''; ?>">
+                        </div>
+                     </div>
                   </div>
 
                   <form method="POST" enctype="multipart/form-data">
@@ -182,24 +191,22 @@ $profile = getProfile($user_id);
       </div>
    </div>
 
-   <script>
-      function previewImage(event) {
-         const reader = new FileReader();
-         const imagePreview = document.getElementById('imagePreview');
-
-         reader.onload = function() {
-            imagePreview.src = reader.result;
-            imagePreview.classList.remove('d-none'); // Show the image preview
-         };
-
-         if (event.target.files[0]) {
-            reader.readAsDataURL(event.target.files[0]); // Read the selected file
-         } else {
-            imagePreview.src = "#";
-            imagePreview.classList.add('d-none'); // Hide the image preview if no file is selected
-         }
-      }
-   </script>
-</body>
-
 </html>
+<script>
+   function previewImage(event) {
+      const reader = new FileReader();
+      const imagePreview = document.getElementById('imagePreview');
+
+      reader.onload = function() {
+         imagePreview.src = reader.result;
+         imagePreview.classList.remove('d-none'); // Show the image preview
+      };
+
+      if (event.target.files[0]) {
+         reader.readAsDataURL(event.target.files[0]); // Read the selected file
+      } else {
+         imagePreview.src = "#";
+         imagePreview.classList.add('d-none'); // Hide the image preview if no file is selected
+      }
+   }
+</script>
