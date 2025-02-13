@@ -1,6 +1,5 @@
 <?php
 include 'controllers/auth.php';
-
 include 'validations/loginValidation.php';
 
 // Define an array to hold field names and corresponding validation functions
@@ -14,6 +13,11 @@ $errors = [];
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+   // Initialize email and password variables
+   $email = $_POST['email'] ?? '';
+   $password = $_POST['password'] ?? '';
+
    // Loop through each field and validate using the defined validation rules
    foreach ($validationRules as $field => $validationFunction) {
       // Get the value of the field and validate it
