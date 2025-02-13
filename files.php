@@ -9,30 +9,36 @@ if (!isset($_SESSION['user_id'])) {
 
 include 'controllers/files_functions.php';
 include 'validations/fileValidation.php';
-
 $user_id = $_SESSION['user_id'];
 
+// Handle file upload
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
-       // Validate the file size
-       $validation_result = validateFileSize($_FILES['file']);
+      $validation_result = validateFileSize($_FILES['file']);
 
-       if ($validation_result === true) {
-           // If validation passes, proceed with the upload
-           $file_name = $_FILES['file']['name']; // Use the original file name
-           $temp_file = $_FILES['file']['tmp_name'];
+      if ($validation_result === true) {
+         $file_name = $_FILES['file']['name'];
+         $temp_file = $_FILES['file']['tmp_name'];
 
-           if (addFile($user_id, $file_name, $temp_file)) {
-               $success_message = "File uploaded successfully!";
-           } else {
-               $error_message = "Error uploading file.";
-           }
-       } else {
-           // If validation fails, set an error message
-           $error_message = $validation_result;
-       }
+         if (addFile($user_id, $file_name, $temp_file)) {
+            $success_message = "File uploaded successfully!";
+         } else {
+            $error_message = "Error uploading file.";
+         }
+      } else {
+         $error_message = $validation_result;
+      }
+   } elseif (isset($_POST['delete_file'])) {
+      // Handle file deletion
+      $file_id = $_POST['file_id'];
+
+      if (deleteFile($file_id, $user_id)) {
+         $success_message = "File deleted successfully!";
+      } else {
+         $error_message = "Error deleting file.";
+      }
    } else {
-       $error_message = "No file uploaded or an error occurred.";
+      $error_message = "No file uploaded or an error occurred.";
    }
 }
 
@@ -72,11 +78,17 @@ $files = getFiles($user_id);
                   <h2 class="mt-4">Uploaded Files</h2>
                   <ul class="list-group">
                      <?php foreach ($files as $file): ?>
-                        <li class="list-group-item">
-                           <a href="view_image.php?file_id=<?php echo $file['id']; ?>" target="_blank">
-                              <?php echo htmlspecialchars($file['file_name']); ?>
-                           </a>
-                           <small class="text-muted">(Uploaded on: <?php echo $file['upload_date']; ?>)</small>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                           <div>
+                              <a href="<?php echo $file['file_path']; ?>" download>
+                                 <?php echo htmlspecialchars($file['file_name']); ?>
+                              </a>
+                              <small class="text-muted">(Uploaded on: <?php echo $file['upload_date']; ?>)</small>
+                           </div>
+                           <form method="POST" action="files.php" style="display:inline;">
+                              <input type="hidden" name="file_id" value="<?php echo $file['id']; ?>">
+                              <button type="submit" name="delete_file" class="btn btn-danger btn-sm">Delete</button>
+                           </form>
                         </li>
                      <?php endforeach; ?>
                   </ul>

@@ -48,10 +48,10 @@ function getFiles($user_id)
    global $connection;
 
    $sql = "SELECT id, file_name, file_path, upload_date FROM files WHERE user_id = ?";
-   $stmt = $connection->prepare($sql);
-   $stmt->bind_param('i', $user_id);
-   $stmt->execute();
-   $result = $stmt->get_result();
+   $search = $connection->prepare($sql);
+   $search->bind_param('i', $user_id);
+   $search->execute();
+   $result = $search->get_result();
 
    $files = [];
    while ($row = $result->fetch_assoc()) {
@@ -59,4 +59,37 @@ function getFiles($user_id)
    }
 
    return $files;
+}
+
+
+function deleteFile($file_id, $user_id)
+{
+   global $connection;
+
+   // Fetch the file details (including the file path)
+   $sql = "SELECT file_path FROM files WHERE id = ? AND user_id = ?";
+   $search = $connection->prepare($sql);
+   $search->bind_param('ii', $file_id, $user_id);
+   $search->execute();
+   $result = $search->get_result();
+   $file = $result->fetch_assoc();
+
+   if ($file) {
+      // Delete the file from the local file system
+      if (file_exists($file['file_path'])) {
+         if (unlink($file['file_path'])) {
+            // File deleted successfully from the file system
+         } else {
+            return false; // Failed to delete the file locally
+         }
+      }
+
+      // Delete the file record from the database
+      $sql = "DELETE FROM files WHERE id = ?";
+      $stmt = $connection->prepare($sql);
+      $stmt->bind_param('i', $file_id);
+      return $stmt->execute();
+   }
+
+   return false; // File not found or user not authorized
 }
