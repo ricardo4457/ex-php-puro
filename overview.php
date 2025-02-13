@@ -25,7 +25,7 @@ if (!isset($_SESSION['user_id'])) {
                   <h1 class="card-title">Welcome!</h1>
                   <p>What would you like to do?</p>
                   <div class="d-grid gap-2">
-                     <a href="x" class="btn btn-primary">My Profile</a>
+                     <a href="profile.php" class="btn btn-primary">My Profile</a>
                      <a href="x" class="btn btn-secondary">My Files</a>
                      <a href="logout.php" class="btn btn-danger">Logout</a>
                   </div>
