@@ -162,7 +162,7 @@ http://localhost/employee_management
     /validations
         loginValidation.php
         fileValidation.php
-        profileValidation
+        profileValidation.php
     /uploads
     index.php
     overview.php
