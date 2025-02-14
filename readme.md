@@ -23,8 +23,8 @@ Este é um sistema de gestão de funcionários desenvolvido em **PHP puro** com 
 
 ### Gestão de Ficheiros
 
-- Os utilizadores podem visualizar e eliminar ficheiros enviados.
-- Cada ficheiro é exibido com o seu nome, data de upload e um botão para download/eliminação.
+- Os utilizadores podem eliminar ficheiros enviados.
+- Cada ficheiro é exibido com o seu nome, data de upload e um botão para eliminação.
 
 ### Segurança
 
@@ -192,7 +192,7 @@ http://localhost/employee_management
 ### Página de Ficheiros (`files.php`)
 
 - Os utilizadores podem fazer upload de ficheiros.
-- Visualização e eliminação de ficheiros enviados.
+- Eliminação de ficheiros enviados.
 - Impede o upload de ficheiros com o mesmo nome.
 
 ### Logout (`logout.php`)
