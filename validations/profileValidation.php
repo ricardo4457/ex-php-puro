@@ -12,10 +12,27 @@ function validateName($name)
 // Function to validate birthdate
 function validateBirthdate($birthdate)
 {
-
+   // Ensure format YYYY-MM-DD using regex
    if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $birthdate)) {
       return "Invalid date format. Use YYYY-MM-DD.";
    }
+
+   // Extract year, month, and day
+   list($year, $month, $day) = explode('-', $birthdate);
+
+   // Ensure it is a valid date
+   if (!checkdate((int)$month, (int)$day, (int)$year)) {
+      return "Invalid date.";
+   }
+
+   // Set realistic birth date constraints
+   $minYear = date('Y') - 100; // Maximum 100 years old
+   $maxYear = date('Y'); // Cannot be in the future
+
+   if ($year < $minYear || $year > $maxYear) {
+      return "Birthdate is unrealistic.";
+   }
+
    return '';
 }
 
