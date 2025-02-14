@@ -80,9 +80,9 @@ $files = getFiles($user_id);
                      <?php foreach ($files as $file): ?>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                            <div>
-                              <a href="<?php echo $file['file_path']; ?>" download>
-                                 <?php echo htmlspecialchars($file['file_name']); ?>
-                              </a>
+
+                              <?php echo ($file['file_name']); ?>
+
                               <small class="text-muted">(Uploaded on: <?php echo $file['upload_date']; ?>)</small>
                            </div>
                            <form method="POST" action="files.php" style="display:inline;">
