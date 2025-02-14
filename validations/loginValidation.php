@@ -42,10 +42,6 @@ function validatePassword($password, $email)
    $search->execute(['email' => $email]);
    $user = $search->fetch();
 
-   if (!$user) {
-      return "User not found.";
-   }
-
    // If everything is valid, return an empty string
    return '';
 }
