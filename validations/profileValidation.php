@@ -48,8 +48,8 @@ function validatePhone($phone)
 // Function to validate profile photo
 function validateProfilePhoto($file)
 {
-   // Check file type (allow only JPEG and PNG, disallow GIF)
-   $allowed_types = ['image/jpeg', 'image/png']; // Only JPEG and PNG allowed
+   // Check file type (allow only JPEG and PNG)
+   $allowed_types = ['image/jpeg', 'image/png']; 
    if (!in_array($file['type'], $allowed_types)) {
       return "Invalid file type. Only JPEG and PNG are allowed.";
    }
